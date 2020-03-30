@@ -1,0 +1,216 @@
+package com.example.todolist
+
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import android.content.Intent
+import android.os.AsyncTask
+import android.os.Bundle
+import android.os.Handler
+import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.TimePicker
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.room.Room
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main2.*
+import kotlinx.android.synthetic.main.item_user.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.*
+
+const val DB_NAME = "todo.db"
+class Main2Activity : AppCompatActivity(), View.OnClickListener {
+
+
+    lateinit var myCalendar: Calendar
+
+    lateinit var dateSetListener: DatePickerDialog.OnDateSetListener
+    lateinit var timeSetListener: TimePickerDialog.OnTimeSetListener
+
+    var finalDate = 0L
+    var finalTime = 0L
+
+    private var note: User? = null
+
+
+    private val labels = arrayListOf("Personal", "Business", "Shopping", "B'Day", "Reminder")
+
+
+    val db by lazy {
+        AppDatabase.getDatabase(this)
+    }
+
+    //    val list = arrayListOf<User>()
+//    val adapter = UserAdapter(list)
+//    val dataAdded = MutableLiveData<Boolean>()
+//    val msg = MutableLiveData<String>()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main2)
+
+        dateEdt.setOnClickListener(this)
+        timeEdt.setOnClickListener(this)
+        btnsave.setOnClickListener(this)
+
+
+        setUpSpinner()
+
+
+//        btnsave.setOnClickListener{
+//            val noteTitle = edit_text_title.text.toString().trim()
+//            val noteBody = edit_text_note.text.toString().trim()
+//            val noteDate: EditText = findViewById(R.id.dateEdt)
+//            val noteTime : EditText = findViewById(R.id.timeEdt)
+//
+//            if (noteTitle.isEmpty()) {
+//                edit_text_title.error = "Title required"
+//
+//            }
+//            if (noteBody.isEmpty()) {
+//                edit_text_note.error = "Note required"
+//            }
+//            db.userDao().insertTask(User(noteTitle, noteBody, noteDate., noteTime))
+//
+//
+//        }
+    }
+
+
+    private fun setUpSpinner() {
+        val adapter =
+            ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, labels)
+        labels.sort()
+        spinnerCategory.adapter = adapter
+
+    }
+
+
+    override fun onClick(v: View) {
+
+        when (v.id) {
+            R.id.dateEdt -> {
+                setListener()
+            }
+            R.id.timeEdt -> {
+                setTimeListener()
+            }
+            R.id.btnsave -> {
+                saveTodo()
+            }
+
+        }
+
+
+    }
+
+    private fun saveTodo() {
+        val category = spinnerCategory.selectedItem.toString()
+        val title = edit_text_title.text.toString()
+        val description = edit_text_note.text.toString()
+
+
+
+        GlobalScope.launch(Dispatchers.Main) {
+            val id = withContext(Dispatchers.IO) {
+                return@withContext db.userDao().insertTask(
+                    User(
+                        title,
+                        description,
+                        category,
+                        finalDate,
+                        finalTime
+                    )
+                )
+            }
+            if (title.isEmpty()) {
+                edit_text_title.error = "Title required"
+
+            }
+            if (description.isEmpty()) {
+                edit_text_note.error = "Note required"
+            } else {
+                finish()
+            }
+        }
+
+    }
+
+
+//}
+
+    private fun setTimeListener() {
+
+        myCalendar = Calendar.getInstance()
+
+        timeSetListener =
+            TimePickerDialog.OnTimeSetListener() { _: TimePicker, hourOfDay: Int, min: Int ->
+                myCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                myCalendar.set(Calendar.MINUTE, min)
+                updateTime()
+
+            }
+
+        val timePickerDialog = TimePickerDialog(
+            this, timeSetListener, myCalendar.get(Calendar.HOUR_OF_DAY),
+            myCalendar.get(Calendar.MINUTE), false
+        )
+
+        timePickerDialog.show()
+
+    }
+
+    private fun updateTime() {
+        val myFormat = "hh:mm a"
+        val sdf = SimpleDateFormat(myFormat)
+        timeEdt.setText(sdf.format(myCalendar.time))
+
+    }
+
+    private fun setListener() {
+        myCalendar = Calendar.getInstance()
+
+        dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayofmonth ->
+            myCalendar.set(Calendar.YEAR, year)
+            myCalendar.set(Calendar.MONTH, month)
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayofmonth)
+            updateDate()
+
+        }
+
+        val datePickerDialog = DatePickerDialog(
+            this, dateSetListener, myCalendar.get(Calendar.YEAR),
+            myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)
+        )
+        datePickerDialog.datePicker.minDate = System.currentTimeMillis()
+        datePickerDialog.show()
+    }
+
+    private fun updateDate() {
+        val myFormat = "EEE, d MMM yyyy"
+        val sdf = SimpleDateFormat(myFormat)
+        dateEdt.setText(sdf.format(myCalendar.time))
+
+        timeInptLay.visibility = View.VISIBLE
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
