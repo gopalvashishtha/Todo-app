@@ -48,10 +48,7 @@ class Main2Activity : AppCompatActivity(), View.OnClickListener {
         AppDatabase.getDatabase(this)
     }
 
-    //    val list = arrayListOf<User>()
-//    val adapter = UserAdapter(list)
-//    val dataAdded = MutableLiveData<Boolean>()
-//    val msg = MutableLiveData<String>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
@@ -60,29 +57,9 @@ class Main2Activity : AppCompatActivity(), View.OnClickListener {
         timeEdt.setOnClickListener(this)
         btnsave.setOnClickListener(this)
 
-
         setUpSpinner()
 
-
-//        btnsave.setOnClickListener{
-//            val noteTitle = edit_text_title.text.toString().trim()
-//            val noteBody = edit_text_note.text.toString().trim()
-//            val noteDate: EditText = findViewById(R.id.dateEdt)
-//            val noteTime : EditText = findViewById(R.id.timeEdt)
-//
-//            if (noteTitle.isEmpty()) {
-//                edit_text_title.error = "Title required"
-//
-//            }
-//            if (noteBody.isEmpty()) {
-//                edit_text_note.error = "Note required"
-//            }
-//            db.userDao().insertTask(User(noteTitle, noteBody, noteDate., noteTime))
-//
-//
-//        }
     }
-
 
     private fun setUpSpinner() {
         val adapter =
@@ -91,7 +68,6 @@ class Main2Activity : AppCompatActivity(), View.OnClickListener {
         spinnerCategory.adapter = adapter
 
     }
-
 
     override fun onClick(v: View) {
 
@@ -105,10 +81,7 @@ class Main2Activity : AppCompatActivity(), View.OnClickListener {
             R.id.btnsave -> {
                 saveTodo()
             }
-
         }
-
-
     }
 
     private fun saveTodo() {
@@ -116,15 +89,13 @@ class Main2Activity : AppCompatActivity(), View.OnClickListener {
         val title = edit_text_title.text.toString()
         val description = edit_text_note.text.toString()
 
-
-
         GlobalScope.launch(Dispatchers.Main) {
-            val id = withContext(Dispatchers.IO) {
-                return@withContext db.userDao().insertTask(
+           val id = withContext(Dispatchers.IO) {
+                return@withContext db.userDao().insertTask(   //return@withContext
                     User(
+                        category,
                         title,
                         description,
-                        category,
                         finalDate,
                         finalTime
                     )
@@ -132,20 +103,18 @@ class Main2Activity : AppCompatActivity(), View.OnClickListener {
             }
             if (title.isEmpty()) {
                 edit_text_title.error = "Title required"
-
             }
             if (description.isEmpty()) {
                 edit_text_note.error = "Note required"
-            } else {
+            }
+            else {
+
                 finish()
             }
+
         }
 
     }
-
-
-//}
-
     private fun setTimeListener() {
 
         myCalendar = Calendar.getInstance()

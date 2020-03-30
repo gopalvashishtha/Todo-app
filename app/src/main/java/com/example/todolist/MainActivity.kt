@@ -24,29 +24,23 @@ import java.nio.file.Files.delete
 
 
 class MainActivity : AppCompatActivity()  {
-  var list = ArrayList<User>()
+  var list = arrayListOf<User>()
 
-
-     var adapter = UserAdapter(ArrayList<User>())
+     var adapter = UserAdapter(list)
 
     val db by lazy {
         AppDatabase.getDatabase(this)
     }
-
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-
         Rv.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = this@MainActivity.adapter
         }
-
         db.userDao().getTask().observe(this, Observer {
             if (!it.isNullOrEmpty()) {
                 list.clear()
@@ -57,16 +51,11 @@ class MainActivity : AppCompatActivity()  {
                 adapter.notifyDataSetChanged()
             }
         })
-//        adapter = UserAdapter(list)
 
        btnadd.setOnClickListener {  val i = Intent( this, Main2Activity::class.java)
             startActivity(i)
         }
-
-
     }
-
-
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu,menu)
@@ -116,15 +105,6 @@ class MainActivity : AppCompatActivity()  {
             }
         })
     }
-
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        when (item.itemId) {
-//            R.id.history -> {
-//                startActivity(Intent(this, HistoryActivity::class.java))
-//            }
-//        }
-//        return super.onOptionsItemSelected(item)
-//    }
 
     fun openNewTask(view: View) {
         startActivity(Intent(this, Main2Activity::class.java))
