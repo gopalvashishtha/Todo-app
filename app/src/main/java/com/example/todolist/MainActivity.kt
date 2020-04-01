@@ -222,18 +222,6 @@ class MainActivity : AppCompatActivity()  {
     }
 
 
-
-
-
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        when (item.itemId) {
-//            R.id.history -> {
-//                startActivity(Intent(this, HistoryActivity::class.java))
-//            }
-//        }
-//        return super.onOptionsItemSelected(item)
-//    }
-
     fun openNewTask(view: View) {
         startActivity(Intent(this, Main2Activity::class.java))
     }

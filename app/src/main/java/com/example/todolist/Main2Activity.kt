@@ -208,7 +208,7 @@ class Main2Activity : AppCompatActivity(), View.OnClickListener {
         intent.putExtra("isShow", i)
         intent.putExtra("id", id)
         intent.putExtra("title", title)
-        intent.putExtra("date","time-> $hour:$minute")
+
         val pandingIntent: PendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         if (i == 0) {

@@ -1,6 +1,8 @@
 package com.example.todolist
 
 import android.annotation.SuppressLint
+import android.app.Notification
+import android.app.Notification.VISIBILITY_PUBLIC
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
@@ -10,6 +12,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import java.util.*
 
@@ -17,6 +20,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
     var appDatabase: AppDatabase? = null
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     @SuppressLint("WrongConstant")
     override fun onReceive(context: Context?, intent: Intent?) {
 
@@ -40,7 +44,19 @@ class AlarmReceiver : BroadcastReceiver() {
             notificationChannel.enableLights(true)
             notificationChannel.setLightColor(Color.RED)
             notificationChannel.enableVibration(true)
+//            notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            notificationChannel.vibrationPattern
+//            notificationChannel.getLockscreenVisibility()
+
+
+
+
+
+
+
+
             notificationManager.createNotificationChannel(notificationChannel)
+
         }
 
         val notification = NotificationCompat.Builder(context, "Remainder")
@@ -50,10 +66,14 @@ class AlarmReceiver : BroadcastReceiver() {
             .setPriority(NotificationCompat.VISIBILITY_PUBLIC)
             .setColor(Color.RED)
             .setAutoCancel(true)
-            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setVisibility(1)
+
+
             .build()
 
         notificationManager.notify(getNumber(), notification)
+
 
         appDatabase?.userDao()?.isShownUpdate(id = dbId, isShow = 1)
 
