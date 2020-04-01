@@ -102,10 +102,7 @@ class Main2Activity : AppCompatActivity(), View.OnClickListener {
 
         var position: Int = -1
         var index: Long = -1
-//        var i : Int
-//        var id : Long
-//        var hour : Int
-//        var minute : Int
+
         val category = spinnerCategory.selectedItem.toString()
         val title = edit_text_title.text.toString()
         val description = edit_text_note.text.toString()
