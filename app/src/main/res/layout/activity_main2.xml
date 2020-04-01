@@ -54,15 +54,7 @@
             android:inputType="textCapWords"
             android:textStyle="italic" />
 
-        <!--        <com.google.android.material.textfield.TextInputEditText-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:paddingStart="8dp"-->
-        <!--            android:paddingEnd="8dp"-->
-        <!--            android:hint="Title"-->
-        <!--            android:textSize="18sp">-->
 
-        <!--        </com.google.android.material.textfield.TextInputEditText>-->
     </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -170,7 +162,7 @@
         android:layout_marginRight="16dp"
         android:orientation="horizontal"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="16dp">
 
         <Spinner
             android:id="@+id/spinnerCategory"

@@ -29,7 +29,9 @@ class UserAdapter( val users: List<User>) : RecyclerView.Adapter<UserAdapter.Use
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         holder.bind(users[position])
     }
-
+    override fun getItemId(position: Int): Long {
+        return users [position].id
+    }
 
 
 class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

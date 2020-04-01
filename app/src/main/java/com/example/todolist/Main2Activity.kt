@@ -1,11 +1,15 @@
 package com.example.todolist
 
+import android.app.AlarmManager
 import android.app.DatePickerDialog
+import android.app.PendingIntent
 import android.app.TimePickerDialog
+import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.EditText
@@ -38,6 +42,8 @@ class Main2Activity : AppCompatActivity(), View.OnClickListener {
     var finalDate = 0L
     var finalTime = 0L
 
+
+
     private var note: User? = null
 
 
@@ -58,6 +64,7 @@ class Main2Activity : AppCompatActivity(), View.OnClickListener {
         btnsave.setOnClickListener(this)
 
         setUpSpinner()
+
 
     }
 
@@ -85,12 +92,33 @@ class Main2Activity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun saveTodo() {
+        var month = 0
+        var day = 0
+        var year = 0
+        var date: String
+
+        var hour = 0
+        var minute = 0
+
+        var position: Int = -1
+        var index: Long = -1
+//        var i : Int
+//        var id : Long
+//        var hour : Int
+//        var minute : Int
         val category = spinnerCategory.selectedItem.toString()
         val title = edit_text_title.text.toString()
         val description = edit_text_note.text.toString()
+        if (title.isEmpty()) {
+            edit_text_title.error = "Title required"
+        }
+        if (description.isEmpty()) {
+            edit_text_note.error = "Note required"
+        }
+        else {
 
         GlobalScope.launch(Dispatchers.Main) {
-           val id = withContext(Dispatchers.IO) {
+            val id = withContext(Dispatchers.IO) {
                 return@withContext db.userDao().insertTask(   //return@withContext
                     User(
                         category,
@@ -101,16 +129,16 @@ class Main2Activity : AppCompatActivity(), View.OnClickListener {
                     )
                 )
             }
-            if (title.isEmpty()) {
-                edit_text_title.error = "Title required"
+
+            Log.d("Alarm Title", "$month , ${finalDate} : ${myCalendar.time}")
+            id?.let {
+                setAlarm(myCalendar, 0, it, title, hour, minute)
             }
-            if (description.isEmpty()) {
-                edit_text_note.error = "Note required"
-            }
-            else {
+        }
+
 
                 finish()
-            }
+            //}
 
         }
 
@@ -123,6 +151,7 @@ class Main2Activity : AppCompatActivity(), View.OnClickListener {
             TimePickerDialog.OnTimeSetListener() { _: TimePicker, hourOfDay: Int, min: Int ->
                 myCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
                 myCalendar.set(Calendar.MINUTE, min)
+
                 updateTime()
 
             }
@@ -139,6 +168,7 @@ class Main2Activity : AppCompatActivity(), View.OnClickListener {
     private fun updateTime() {
         val myFormat = "hh:mm a"
         val sdf = SimpleDateFormat(myFormat)
+        finalTime = myCalendar.time.time
         timeEdt.setText(sdf.format(myCalendar.time))
 
     }
@@ -166,8 +196,29 @@ class Main2Activity : AppCompatActivity(), View.OnClickListener {
         val myFormat = "EEE, d MMM yyyy"
         val sdf = SimpleDateFormat(myFormat)
         dateEdt.setText(sdf.format(myCalendar.time))
-
+        finalDate = myCalendar.time.time
         timeInptLay.visibility = View.VISIBLE
+    }
+
+
+    fun setAlarm(calender: Calendar, i: Int, id: Long, title: String, hour:Int, minute:Int) {
+
+
+        val alarmManager: AlarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        val intent = Intent(this, AlarmReceiver::class.java)
+        intent.putExtra("INTENT_NOTIFY", true)
+        intent.putExtra("isShow", i)
+        intent.putExtra("id", id)
+        intent.putExtra("title", title)
+        intent.putExtra("date","time-> $hour:$minute")
+        val pandingIntent: PendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        if (i == 0) {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,  calender.timeInMillis , pandingIntent)
+        } else {
+            alarmManager.cancel(pandingIntent)
+        }
     }
 
 }
