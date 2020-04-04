@@ -48,13 +48,6 @@ class AlarmReceiver : BroadcastReceiver() {
             notificationChannel.vibrationPattern
 //            notificationChannel.getLockscreenVisibility()
 
-
-
-
-
-
-
-
             notificationManager.createNotificationChannel(notificationChannel)
 
         }
@@ -67,9 +60,6 @@ class AlarmReceiver : BroadcastReceiver() {
             .setColor(Color.RED)
             .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setVisibility(1)
-
-
             .build()
 
         notificationManager.notify(getNumber(), notification)

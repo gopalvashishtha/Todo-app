@@ -8,6 +8,7 @@ import androidx.room.RoomDatabase
 @Database(entities = [User::class], version = 1, exportSchema = true)
 abstract class AppDatabase :  RoomDatabase(){
 
+
     abstract fun userDao(): Userdao
 
     companion object {
@@ -24,7 +25,9 @@ abstract class AppDatabase :  RoomDatabase(){
                     context.applicationContext,
                     AppDatabase::class.java,
                     DB_NAME
-                ).build()
+                )
+                    .allowMainThreadQueries()
+                    .build()
                 INSTANCE = instance
                 return instance
             }
