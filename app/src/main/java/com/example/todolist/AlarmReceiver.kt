@@ -59,7 +59,7 @@ class AlarmReceiver : BroadcastReceiver() {
             .setPriority(NotificationCompat.VISIBILITY_PUBLIC)
             .setColor(Color.RED)
             .setAutoCancel(true)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setPriority(NotificationCompat.PRIORITY_MAX)
             .build()
 
         notificationManager.notify(getNumber(), notification)

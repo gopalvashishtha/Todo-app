@@ -7,6 +7,7 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -15,11 +16,13 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.TimePicker
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
+import com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main2.*
 import kotlinx.android.synthetic.main.item_user.*
@@ -93,23 +96,35 @@ class Main2Activity : AppCompatActivity(), View.OnClickListener {
 
     private fun saveTodo() {
 
+
         var month = 0
         var dayofmonth = 0
         var year = 0
 //       var date: String
 
-        var hourOfDay = 0
-        var min = 0
+
 
         var position: Int = -1
         var index: Long = -1
         myCalendar = Calendar.getInstance()
+
+//        val cal : Calendar = Calendar.getInstance()
+//updatemyCalendar()
+
+//        myCalendar.set(Calendar.MONTH, month)
+//        myCalendar.set(Calendar.YEAR, year)
+//        myCalendar.set(Calendar.DAY_OF_MONTH, dayofmonth)
+        val hourOfDay = myCalendar.get(Calendar.HOUR_OF_DAY)
+        val min = myCalendar.get(Calendar.MINUTE)
+//        updatecal()
 
         val category = spinnerCategory.selectedItem.toString()
         val title = edit_text_title.text.toString()
         val description = edit_text_note.text.toString()
         val date = dateEdt.text.toString()
         val time = timeEdt.text.toString()
+
+
         if (title.isEmpty()) {
             edit_text_title.error = "Title required"
         }
@@ -139,25 +154,32 @@ class Main2Activity : AppCompatActivity(), View.OnClickListener {
                     )
                 )
             }
-            myCalendar.set(Calendar.YEAR, year)
-            myCalendar.set(Calendar.MONTH, month)
-            myCalendar.set(Calendar.DAY_OF_MONTH, dayofmonth)
+//            myCalendar.set(Calendar.YEAR, year)
+//            myCalendar.set(Calendar.MONTH, month)
+//            myCalendar.set(Calendar.DAY_OF_MONTH, dayofmonth)
+//
+//            myCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
+//            myCalendar.set(Calendar.MINUTE, min)
 
-            myCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
-            myCalendar.set(Calendar.MINUTE, min)
-
-            Log.d("Alarm Title", "$month , ${finalDate} : ${myCalendar.time}")
+            Log.d("Alarm Title", "$month , ${finalDate} : ${finalTime}")
             id?.let {
                 setAlarm(myCalendar, 0, it, title, hourOfDay, min)
             }
         }
             finish()
 
-
-
         }
-
     }
+
+//    private fun updatemyCalendar() {
+//
+//
+//
+////updateTime()
+////updateDate()
+//
+//    }
+
     private fun setTimeListener() {
 
         myCalendar = Calendar.getInstance()
@@ -216,17 +238,24 @@ class Main2Activity : AppCompatActivity(), View.OnClickListener {
     }
 
 
+
     fun setAlarm(calender: Calendar, i: Int, id: Long, title: String, hourOfDay:Int, min:Int) {
+
+    AlarmManagerSchedulerBroadcastReceiver(hourOfDay)
+
+
 
 
         val alarmManager: AlarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+
 
         val intent = Intent(this, AlarmReceiver::class.java)
         intent.putExtra("INTENT_NOTIFY", true)
         intent.putExtra("isShow", i)
         intent.putExtra("id", id)
         intent.putExtra("title", title)
-        intent.putExtra("date","Time-> $hourOfDay:$min")
+        intent.putExtra("date","Time->$hourOfDay:$min ")
 
         val pandingIntent: PendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 

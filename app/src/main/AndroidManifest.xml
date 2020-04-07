@@ -18,10 +18,7 @@
         android:roundIcon="@mipmap/ic_launcher_todolist_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <receiver
-            android:name=".AlarmReceiver"
-            android:enabled="true"
-            android:exported="true"></receiver>
+
 
         <activity android:name=".Main2Activity" />
         <activity android:name=".MainActivity">
@@ -34,6 +31,11 @@
 
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name=".AlarmReceiver"
+            android:enabled="true"
+            android:exported="true"></receiver>
     </application>
 
 </manifest>
