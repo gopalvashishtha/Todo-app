@@ -22,7 +22,13 @@
             app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
     </com.google.android.material.appbar.AppBarLayout>
-
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
     <TextView
         android:layout_width="67dp"
@@ -180,18 +186,6 @@
     </LinearLayout>
 
 
-    <!--    <EditText-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:layout_below="@+id/edit_text_title"-->
-    <!--        android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
-    <!--        android:hint="Write here"-->
-    <!--        -->
-    <!--        android:inputType="textMultiLine"-->
-    <!--        android:gravity="top"-->
-    <!--        />-->
-
-
     <Button
         android:id="@+id/btnsave"
         android:layout_width="wrap_content"
@@ -206,8 +200,8 @@
         android:layout_marginEnd="16dp"
         app:cornerRadius = "25dp" />
 
+    </LinearLayout>
 
-
-
+</ScrollView>
 
 </LinearLayout>
