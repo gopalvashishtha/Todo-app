@@ -43,7 +43,6 @@ class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             viewColorTag.setBackgroundColor(randomColor)
             txtShowTitle.text = user.title
             txtShowtask.text = user.description
-//            txtShowCategory.text = user.category
             updateTime(user.time)
             updateDate(user.date)
         }

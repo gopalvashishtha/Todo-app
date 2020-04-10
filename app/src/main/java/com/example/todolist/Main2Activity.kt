@@ -45,11 +45,6 @@ class Main2Activity : AppCompatActivity(), View.OnClickListener {
     var finalDate = 0L
     var finalTime = 0L
 
-
-
-    private var note: User? = null
-
-
     private val labels = arrayListOf("Personal", "Business", "Shopping", "B'Day", "Reminder")
 
 
@@ -67,7 +62,6 @@ class Main2Activity : AppCompatActivity(), View.OnClickListener {
         btnsave.setOnClickListener(this)
 
         setUpSpinner()
-
 
     }
 
@@ -100,30 +94,14 @@ class Main2Activity : AppCompatActivity(), View.OnClickListener {
         var month = 0
         var dayofmonth = 0
         var year = 0
-//       var date: String
-
-
-
-        var position: Int = -1
-        var index: Long = -1
-        myCalendar = Calendar.getInstance()
-
-//        val cal : Calendar = Calendar.getInstance()
-//updatemyCalendar()
-
-//        myCalendar.set(Calendar.MONTH, month)
-//        myCalendar.set(Calendar.YEAR, year)
-//        myCalendar.set(Calendar.DAY_OF_MONTH, dayofmonth)
-        val hourOfDay = myCalendar.get(Calendar.HOUR_OF_DAY)
-        val min = myCalendar.get(Calendar.MINUTE)
-//        updatecal()
+        var hourOfDay = 0
+        var min = 0
 
         val category = spinnerCategory.selectedItem.toString()
         val title = edit_text_title.text.toString()
         val description = edit_text_note.text.toString()
         val date = dateEdt.text.toString()
         val time = timeEdt.text.toString()
-
 
         if (title.isEmpty()) {
             edit_text_title.error = "Title required"
@@ -141,10 +119,11 @@ class Main2Activity : AppCompatActivity(), View.OnClickListener {
 
         else {
 
+
         GlobalScope.launch(Dispatchers.Main) {
             val id = withContext(Dispatchers.IO) {
 
-                return@withContext db.userDao().insertTask(   //return@withContext
+                return@withContext db.userDao().insertTask(
                     User(
                         category,
                         title,
@@ -154,16 +133,10 @@ class Main2Activity : AppCompatActivity(), View.OnClickListener {
                     )
                 )
             }
-//            myCalendar.set(Calendar.YEAR, year)
-//            myCalendar.set(Calendar.MONTH, month)
-//            myCalendar.set(Calendar.DAY_OF_MONTH, dayofmonth)
-//
-//            myCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
-//            myCalendar.set(Calendar.MINUTE, min)
 
-            Log.d("Alarm Title", "$month , ${finalDate} : ${finalTime}")
+            Log.d("Alarm Title", "$month , $finalDate : ${myCalendar.time}")
             id?.let {
-                setAlarm(myCalendar, 0, it, title, hourOfDay, min)
+               setAlarm( myCalendar,0, it, title,hourOfDay, min) //hourOfDay, min
             }
         }
             finish()
@@ -171,16 +144,7 @@ class Main2Activity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-//    private fun updatemyCalendar() {
-//
-//
-//
-////updateTime()
-////updateDate()
-//
-//    }
-
-    private fun setTimeListener() {
+     fun setTimeListener() {
 
         myCalendar = Calendar.getInstance()
 
@@ -188,7 +152,6 @@ class Main2Activity : AppCompatActivity(), View.OnClickListener {
             TimePickerDialog.OnTimeSetListener() { _: TimePicker, hourOfDay: Int, min: Int ->
                 myCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
                 myCalendar.set(Calendar.MINUTE, min)
-
                 updateTime()
 
             }
@@ -202,7 +165,7 @@ class Main2Activity : AppCompatActivity(), View.OnClickListener {
 
     }
 
-    private fun updateTime() {
+    fun updateTime() { //private fun
         val myFormat = "hh:mm a"
         val sdf = SimpleDateFormat(myFormat)
         finalTime = myCalendar.time.time
@@ -237,33 +200,21 @@ class Main2Activity : AppCompatActivity(), View.OnClickListener {
         timeInptLay.visibility = View.VISIBLE
     }
 
-
-
-    fun setAlarm(calender: Calendar, i: Int, id: Long, title: String, hourOfDay:Int, min:Int) {
-
-    AlarmManagerSchedulerBroadcastReceiver(hourOfDay)
-
-
+    fun setAlarm(myCalendar: Calendar, i: Int, id: Long, title: String,hourOfDay:Int, min:Int ) {
 
 
         val alarmManager: AlarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-
 
         val intent = Intent(this, AlarmReceiver::class.java)
         intent.putExtra("INTENT_NOTIFY", true)
         intent.putExtra("isShow", i)
         intent.putExtra("id", id)
         intent.putExtra("title", title)
-        intent.putExtra("date","Time->$hourOfDay:$min ")
 
-        val pandingIntent: PendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pandingIntent: PendingIntent = PendingIntent.getBroadcast(this, (0..2147483647).random(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        if (i == 0) {
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,  calender.timeInMillis , pandingIntent)
-        } else {
-            alarmManager.cancel(pandingIntent)
-        }
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,  myCalendar.timeInMillis , pandingIntent)
+
     }
 
 }

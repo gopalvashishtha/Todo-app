@@ -39,14 +39,12 @@ class AlarmReceiver : BroadcastReceiver() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel =
                 NotificationChannel("Remainder", "My Notifications", NotificationManager.IMPORTANCE_MAX)
-            // Configure the notification channel.
+
             notificationChannel.setDescription("Sample Channel description")
             notificationChannel.enableLights(true)
             notificationChannel.setLightColor(Color.RED)
             notificationChannel.enableVibration(true)
-//            notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
             notificationChannel.vibrationPattern
-//            notificationChannel.getLockscreenVisibility()
 
             notificationManager.createNotificationChannel(notificationChannel)
 
@@ -64,9 +62,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
         notificationManager.notify(getNumber(), notification)
 
-
         appDatabase?.userDao()?.isShownUpdate(id = dbId, isShow = 1)
-
 
         val list = appDatabase?.userDao()?.get(dbId)
 
