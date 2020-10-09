@@ -17,3 +17,9 @@ Todo app to save your tasks . Also there is an alarm function which will remind 
 </p>
 
 
+                                                         Search a task
+<p align="center">
+<img src="https://user-images.githubusercontent.com/59801625/95582042-a9139f00-0a57-11eb-9a63-18d5a3718953.jpg" width="200" height="400" />
+</p>
+
+                  
